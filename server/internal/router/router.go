@@ -1,0 +1,31 @@
+package router
+
+import (
+	"server/internal/controller/account"
+	"server/internal/controller/auth"
+	"server/internal/controller/site"
+	"server/internal/middleware"
+
+	"github.com/gogf/gf/v2/net/ghttp"
+)
+
+func LoadRouter(s *ghttp.Server) {
+	s.Group("/api/v1/witkey", func(group *ghttp.RouterGroup) {
+		group.Middleware(ghttp.MiddlewareHandlerResponse)
+		group.Bind(
+			auth.NewV1(),
+			site.NewV1(),
+		).Middleware(middleware.Response)
+		group.Bind(
+			account.NewV1(),
+		// product.NewV1(),
+		// comment.NewV1(),
+		// order.NewV1(),
+		// aftersales.NewV1(),
+		// settlement.NewV1(),
+		// prestore.NewV1(),
+		// witkey.NewV1(),
+		// upload.NewV1(),
+		).Middleware(middleware.Auth).Middleware(middleware.Response)
+	})
+}
