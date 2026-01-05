@@ -1,6 +1,6 @@
 <template>
   <ElRow :gutter="20" class="flex">
-    <ElCol v-for="(item, index) in dataList" :key="index" :sm="12" :md="6" :lg="6">
+    <ElCol v-for="(item, index) in dataList" :key="index" :sm="12" :md="8" :lg="8">
       <div class="art-card relative flex flex-col justify-center h-35 px-5 mb-5 max-sm:mb-4">
         <span class="text-g-700 text-sm">{{ item.des }}</span>
         <ArtCountTo class="text-[26px] font-medium mt-2" :target="item.num" :duration="1300" />
@@ -39,7 +39,7 @@
    */
   const dataList = reactive<CardDataItem[]>([
     {
-      des: '总访问次数',
+      des: '待服务订单',
       icon: 'ri:pie-chart-line',
       startVal: 0,
       duration: 1000,
@@ -47,7 +47,7 @@
       change: '+20%'
     },
     {
-      des: '在线访客数',
+      des: '待处理售后',
       icon: 'ri:group-line',
       startVal: 0,
       duration: 1000,
@@ -55,20 +55,12 @@
       change: '+10%'
     },
     {
-      des: '点击量',
+      des: '待审核报单',
       icon: 'ri:fire-line',
       startVal: 0,
       duration: 1000,
       num: 9520,
       change: '-12%'
     },
-    {
-      des: '新用户',
-      icon: 'ri:progress-2-line',
-      startVal: 0,
-      duration: 1000,
-      num: 156,
-      change: '+30%'
-    }
   ])
 </script>

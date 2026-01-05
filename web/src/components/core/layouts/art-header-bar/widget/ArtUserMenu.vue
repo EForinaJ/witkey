@@ -14,7 +14,7 @@
     <template #reference>
       <img
         class="size-8.5 mr-5 c-p rounded-full max-sm:w-6.5 max-sm:h-6.5 max-sm:mr-[16px]"
-        src="@imgs/user/avatar.webp"
+        :src="userInfo.avatar!"
         alt="avatar"
       />
     </template>
@@ -36,18 +36,6 @@
           <li class="btn-item" @click="goPage('/system/user-center')">
             <ArtSvgIcon icon="ri:user-3-line" />
             <span>{{ $t('topBar.user.userCenter') }}</span>
-          </li>
-          <li class="btn-item" @click="toDocs()">
-            <ArtSvgIcon icon="ri:book-2-line" />
-            <span>{{ $t('topBar.user.docs') }}</span>
-          </li>
-          <li class="btn-item" @click="toGithub()">
-            <ArtSvgIcon icon="ri:github-line" />
-            <span>{{ $t('topBar.user.github') }}</span>
-          </li>
-          <li class="btn-item" @click="lockScreen()">
-            <ArtSvgIcon icon="ri:lock-line" />
-            <span>{{ $t('topBar.user.lockScreen') }}</span>
           </li>
           <div class="w-full h-px my-2 bg-g-300/80"></div>
           <div class="log-out c-p" @click="loginOut">

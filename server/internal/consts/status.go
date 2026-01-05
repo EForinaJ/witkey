@@ -1,0 +1,24 @@
+package consts
+
+const (
+	StatusApply   = 1 // 待审核
+	StatusSuccess = 2 // 通过
+	StatusFail    = 3 // 拒绝
+)
+const (
+	OrderStatusPendingPayment = 1 // 待付款
+	OrderStatusPendingOrder   = 2 // 待服务
+	OrderStatusInProgress     = 3 // 进行中
+	OrderStatusComplete       = 4 // 已完成
+	OrderStatusCancel         = 5 // 已取消
+	OrderStatusRefund         = 6 // 已退款
+)
+
+const (
+	DistributeStatusPending       = 1 // 待服务
+	DistributeStatusInProgress    = 2 // 进行中
+	DistributeStatusComplete      = 3 // 已完成
+	DistributeStatusSettlementing = 4 // 结算中
+	DistributeStatusSettlemented  = 5 // 已结算
+	DistributeStatusCancel        = 6 // 已取消
+)

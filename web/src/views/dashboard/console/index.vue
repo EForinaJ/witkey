@@ -1,41 +1,32 @@
 <!-- 工作台页面 -->
 <template>
   <div>
-    <CardList></CardList>
-
     <ElRow :gutter="20">
-      <ElCol :sm="24" :md="12" :lg="10">
-        <ActiveUser />
+      <ElCol :sm="24" :md="12" :lg="16">
+        <Banner />
+        <CardList />
+        <HotProduct/>
       </ElCol>
-      <ElCol :sm="24" :md="12" :lg="14">
-        <SalesOverview />
+      <ElCol :sm="24" :md="12" :lg="8">
+        <NavBox />
       </ElCol>
     </ElRow>
-
-    <ElRow :gutter="20">
-      <ElCol :sm="24" :md="24" :lg="12">
-        <NewUser />
-      </ElCol>
-      <ElCol :sm="24" :md="12" :lg="6">
-        <Dynamic />
-      </ElCol>
-      <ElCol :sm="24" :md="12" :lg="6">
-        <TodoList />
-      </ElCol>
-    </ElRow>
-
-    <AboutProject />
   </div>
 </template>
 
 <script setup lang="ts">
-  import CardList from './modules/card-list.vue'
-  import ActiveUser from './modules/active-user.vue'
-  import SalesOverview from './modules/sales-overview.vue'
-  import NewUser from './modules/new-user.vue'
-  import Dynamic from './modules/dynamic-stats.vue'
-  import TodoList from './modules/todo-list.vue'
-  import AboutProject from './modules/about-project.vue'
+import CardList from './modules/card-list.vue'
+import ActiveUser from './modules/active-user.vue'
 
-  defineOptions({ name: 'Console' })
+import NewUser from './modules/new-user.vue'
+import Dynamic from './modules/dynamic-stats.vue'
+import TodoList from './modules/todo-list.vue'
+import AboutProject from './modules/about-project.vue'
+import SalesOverview from './modules/sales-overview.vue'
+import Banner from './modules/banner.vue'
+import Tranlist from './modules/tranlist.vue'
+import HotProduct from './modules/hot-product.vue'
+import NavBox from './modules/nav-box.vue'
+
+defineOptions({ name: 'Console' })
 </script>

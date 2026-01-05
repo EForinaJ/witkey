@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"server/internal/dao"
 	"server/internal/lib/jwt"
 	"server/internal/utils/response"
 	"strings"
@@ -23,16 +24,18 @@ func Auth(r *ghttp.Request) {
 			SetMessage("访问失败,无效的token,请登录").Send()
 	}
 
-	// 判断是否有角色
-	// rolesList, err := dao.SysManageRole.
-	// 	Ctx(r.Context()).
-	// 	Where(dao.SysManageRole.Columns().ManageId, mc.Id).
-	// 	Fields(dao.SysManageRole.Columns().RoleId).
-	// 	Array()
-	// if err != nil {
-	// 	response.Error(r).SetCode(response.ACCESS_TOKEN_TIMEOUT).
-	// 		SetMessage("访问失败,无效的token,请登录").Send()
-	// }
+	// 判断是否是威客
+	exist, err := dao.SysWitkey.Ctx(r.Context()).
+		Where(dao.SysWitkey.Columns().UserId, mc.Id).
+		Exist()
+	if err != nil {
+		response.Error(r).SetCode(response.ACCESS_TOKEN_TIMEOUT).
+			SetMessage("访问失败,无效的token,请登录").Send()
+	}
+	if !exist {
+		response.Error(r).SetCode(response.ACCESS_TOKEN_TIMEOUT).
+			SetMessage("该用户不是威客，无法登录").Send()
+	}
 
 	// 将当前请求的userID信息保存到请求的上下文c上
 	r.SetCtxVar("userId", mc.Id)

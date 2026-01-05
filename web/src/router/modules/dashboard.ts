@@ -5,9 +5,8 @@ export const dashboardRoutes: AppRouteRecord = {
   path: '/dashboard',
   component: '/index/index',
   meta: {
-    title: 'menus.dashboard.title',
-    icon: 'ri:pie-chart-line',
-    roles: ['R_SUPER', 'R_ADMIN']
+    title: '仪表盘',
+    icon: 'solar:pie-chart-2-bold',
   },
   children: [
     {
@@ -15,10 +14,36 @@ export const dashboardRoutes: AppRouteRecord = {
       name: 'Console',
       component: '/dashboard/console',
       meta: {
-        title: 'menus.dashboard.console',
+        title: '工作台',
         keepAlive: false,
-        fixedTab: true
       }
-    }
+    },
+    {
+      path: 'distribute',
+      name: 'DashboardDistribute',
+      component: '/distribute',
+      meta: {
+          title: '我的服务',
+          keepAlive: true,
+      },
+    },
+    {
+        path: 'settlement',
+        name: 'DashboardSettlement',
+        component: '/distribute/settlement',
+        meta: {
+            title: '报单结算',
+            keepAlive: true,
+        },
+    },
+    {
+      path: 'settlement',
+      name: 'DashboardSettlement',
+      component: '/distribute/settlement',
+      meta: {
+          title: '佣金提现',
+          keepAlive: true,
+      },
+  },
   ]
 }

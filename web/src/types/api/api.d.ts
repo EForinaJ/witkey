@@ -50,9 +50,7 @@ declare namespace Api {
 
     /** 分页响应基础结构 */
     interface PaginatedResponse<T = any> {
-      records: T[]
-      current: number
-      size: number
+      list: T[]
       total: number
     }
 

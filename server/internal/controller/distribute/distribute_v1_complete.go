@@ -1,0 +1,17 @@
+package distribute
+
+import (
+	"context"
+
+	v1 "server/api/distribute/v1"
+	"server/internal/service"
+)
+
+func (c *ControllerV1) Complete(ctx context.Context, req *v1.CompleteReq) (res *v1.CompleteRes, err error) {
+	err = service.Distribute().CheckComplete(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	err = service.Distribute().Complete(ctx, req.Id)
+	return
+}
