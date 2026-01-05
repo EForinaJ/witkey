@@ -47,6 +47,8 @@ function fetchStatusOptions(): Promise<typeof statusOptions.value> {
         { label: '待服务', value: DistributeStatus.Pending },
         { label: '进行中', value: DistributeStatus.InProgress },
         { label: '已完成', value: DistributeStatus.Completed },
+        { label: '结算中', value: DistributeStatus.Settlementing },
+        { label: '已结算', value: DistributeStatus.Settlemented },
         { label: '已取消', value: DistributeStatus.Cancel },
       ])
     }, 1000)

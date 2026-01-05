@@ -28,18 +28,9 @@ export const dashboardRoutes: AppRouteRecord = {
       },
     },
     {
-        path: 'settlement',
-        name: 'DashboardSettlement',
-        component: '/distribute/settlement',
-        meta: {
-            title: '报单结算',
-            keepAlive: true,
-        },
-    },
-    {
-      path: 'settlement',
-      name: 'DashboardSettlement',
-      component: '/distribute/settlement',
+      path: 'withdraw',
+      name: 'DashboardWithdraw',
+      component: '/withdraw',
       meta: {
           title: '佣金提现',
           keepAlive: true,

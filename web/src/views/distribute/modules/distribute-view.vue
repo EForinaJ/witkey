@@ -2,7 +2,7 @@
     <ElDrawer
       v-model="visible"
       title="订单详情"
-      size="35%"
+      size="40%"
       @close="handleClose"
       :close-on-press-escape="false"
     >
@@ -111,7 +111,7 @@
   
 <script setup lang="ts">
 import { fetchGetDistributeDetail } from '@/api/distribute';
-import { ApplyStatus, DistributeStatus, Status } from '@/enums/statusEnum';
+import { ApplyStatus, DistributeStatus } from '@/enums/statusEnum';
 import { DistributeType } from '@/enums/typeEnum';
 import { useSiteStore } from '@/store/modules/site';
 
@@ -140,6 +140,8 @@ const DISTRIBUTE_STATUS = {
     [DistributeStatus.InProgress]: { type: 'primary' as const, text: '进行中' },
     [DistributeStatus.Completed]: { type: 'success' as const, text: '已完成' },
     [DistributeStatus.Cancel]: { type: 'danger' as const, text: '已取消' },
+    [DistributeStatus.Settlementing]: { type: 'warning' as const, text: '结算中' },
+    [DistributeStatus.Settlemented]: { type: 'success' as const, text: '已结算' },
 } as const
 
 /**
@@ -191,32 +193,6 @@ const getData = async () =>{
     detail.value = res
     loading.value = false
 }
-const productData = computed(()=>{
-    return detail.value ? [detail.value?.product] :[]
-})
-
-const addDiscountModalVisible = ref(false)
-const handleAddDiscount = (): void => {
-    nextTick(() => {
-        addDiscountModalVisible.value = true
-    })
-}
-
-const aftersalesModalVisible = ref(false)
-const handleAftersales = () => {
-    nextTick(() => {
-        aftersalesModalVisible.value = true
-    })
-}
-
-
-const distributeModalVisible = ref(false)
-const handleDistribute = () => {
-    nextTick(() => {
-        distributeModalVisible.value = true
-    })
-}
-
 
 
 /**

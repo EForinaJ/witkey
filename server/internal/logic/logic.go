@@ -6,4 +6,5 @@ import (
 	_ "server/internal/logic/distribute"
 	_ "server/internal/logic/site"
 	_ "server/internal/logic/upload"
+	_ "server/internal/logic/withdraw"
 )
