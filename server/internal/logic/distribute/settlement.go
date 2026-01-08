@@ -50,12 +50,11 @@ func (s *sDistribute) Settlement(ctx context.Context, req *dto_distribute.Settle
 
 	order, err := tx.Model(dao.SysOrder.Table()).
 		Where(dao.SysOrder.Columns().Id, obj.GMap().Get(dao.SysDistribute.Columns().OrderId)).
-		Fields(dao.SysOrder.Columns().TotalAmount).
+		Fields(dao.SysOrder.Columns().TotalAmount, dao.SysOrder.Columns().WitkeyCount).
 		One()
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-
 	// 获取头衔费率
 	servicePercent, err := tx.Model(dao.SysTitle.Table()).
 		Where(dao.SysTitle.Columns().Id, witkey.GMap().Get(dao.SysWitkey.Columns().TitleId)).
@@ -64,25 +63,54 @@ func (s *sDistribute) Settlement(ctx context.Context, req *dto_distribute.Settle
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
 
-	totalAmount := decimal.NewFromFloat(gconv.Float64(order.GMap().Get(dao.SysOrder.Columns().TotalAmount)))
-	percent := decimal.NewFromFloat(servicePercent.Float64()).Div(decimal.NewFromFloat(100))
-	commission := totalAmount.Mul(percent)
-	serviceCharge := totalAmount.Sub(commission)
+	// 自带队伍结算
+	if gconv.Int(obj.GMap().Get(dao.SysDistribute.Columns().Type)) == consts.DistributeTypeTeam {
 
-	_, err = tx.Model(dao.SysSettlement.Table()).Data(g.Map{
-		dao.SysSettlement.Columns().WitkeyId:      witkey.GMap().Get(dao.SysWitkey.Columns().Id),
-		dao.SysSettlement.Columns().OrderId:       obj.GMap().Get(dao.SysDistribute.Columns().OrderId),
-		dao.SysSettlement.Columns().DistributeId:  req.Id,
-		dao.SysSettlement.Columns().Amount:        totalAmount,
-		dao.SysSettlement.Columns().Commission:    commission,
-		dao.SysSettlement.Columns().ServiceCharge: serviceCharge,
-		dao.SysSettlement.Columns().Images:        req.Images,
-		dao.SysSettlement.Columns().Code:          utils_code.GetCode(ctx, "SL"),
-		dao.SysSettlement.Columns().Status:        consts.StatusApply,
-		dao.SysSettlement.Columns().CreateTime:    gtime.Now(),
-	}).Insert()
-	if err != nil {
-		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
+		totalAmount := decimal.NewFromFloat(gconv.Float64(order.GMap().Get(dao.SysOrder.Columns().TotalAmount)))
+		percent := decimal.NewFromFloat(servicePercent.Float64()).Div(decimal.NewFromFloat(100))
+		commission := totalAmount.Mul(percent)
+		serviceCharge := totalAmount.Sub(commission)
+
+		_, err = tx.Model(dao.SysSettlement.Table()).Data(g.Map{
+			dao.SysSettlement.Columns().WitkeyId:      witkey.GMap().Get(dao.SysWitkey.Columns().Id),
+			dao.SysSettlement.Columns().OrderId:       obj.GMap().Get(dao.SysDistribute.Columns().OrderId),
+			dao.SysSettlement.Columns().DistributeId:  req.Id,
+			dao.SysSettlement.Columns().Amount:        totalAmount,
+			dao.SysSettlement.Columns().Commission:    commission,
+			dao.SysSettlement.Columns().ServiceCharge: serviceCharge,
+			dao.SysSettlement.Columns().Images:        req.Images,
+			dao.SysSettlement.Columns().Code:          utils_code.GetCode(ctx, "SL"),
+			dao.SysSettlement.Columns().Status:        consts.StatusApply,
+			dao.SysSettlement.Columns().CreateTime:    gtime.Now(),
+		}).Insert()
+		if err != nil {
+			return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
+		}
+	}
+
+	if gconv.Int(obj.GMap().Get(dao.SysDistribute.Columns().Type)) == consts.DistributeTypeSelf {
+
+		totalAmount := decimal.NewFromFloat(gconv.Float64(order.GMap().Get(dao.SysOrder.Columns().TotalAmount))).
+			Sub(decimal.NewFromFloat(gconv.Float64(order.GMap().Get(dao.SysOrder.Columns().WitkeyCount))))
+		percent := decimal.NewFromFloat(servicePercent.Float64()).Div(decimal.NewFromFloat(100))
+		commission := totalAmount.Mul(percent)
+		serviceCharge := totalAmount.Sub(commission)
+
+		_, err = tx.Model(dao.SysSettlement.Table()).Data(g.Map{
+			dao.SysSettlement.Columns().WitkeyId:      witkey.GMap().Get(dao.SysWitkey.Columns().Id),
+			dao.SysSettlement.Columns().OrderId:       obj.GMap().Get(dao.SysDistribute.Columns().OrderId),
+			dao.SysSettlement.Columns().DistributeId:  req.Id,
+			dao.SysSettlement.Columns().Amount:        totalAmount,
+			dao.SysSettlement.Columns().Commission:    commission,
+			dao.SysSettlement.Columns().ServiceCharge: serviceCharge,
+			dao.SysSettlement.Columns().Images:        req.Images,
+			dao.SysSettlement.Columns().Code:          utils_code.GetCode(ctx, "SL"),
+			dao.SysSettlement.Columns().Status:        consts.StatusApply,
+			dao.SysSettlement.Columns().CreateTime:    gtime.Now(),
+		}).Insert()
+		if err != nil {
+			return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))
+		}
 	}
 
 	_, err = tx.Model(dao.SysDistribute.Table()).

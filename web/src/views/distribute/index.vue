@@ -30,7 +30,7 @@
           @submit="refreshData"
         />
         <DistributeSettlementModal
-        v-model:visible="settlementModalVisible"
+            v-model:visible="settlementModalVisible"
             :id="id"
             @submit="getData"
         />

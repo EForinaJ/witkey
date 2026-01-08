@@ -6,7 +6,9 @@ declare namespace Withdraw {
             code?: string;
             status?: number;
         }
-
+        interface Modle {
+            amount: number;
+        }
     }
     namespace Response {
        

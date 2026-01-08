@@ -24,7 +24,9 @@ export const dashboardRoutes: AppRouteRecord = {
       component: '/distribute',
       meta: {
           title: '我的服务',
+          isHide:  true,
           keepAlive: true,
+          activePath: '/dashboard/console',
       },
     },
     {
@@ -33,7 +35,9 @@ export const dashboardRoutes: AppRouteRecord = {
       component: '/withdraw',
       meta: {
           title: '佣金提现',
+          isHide:  true,
           keepAlive: true,
+          activePath: '/dashboard/console',
       },
   },
   ]
