@@ -16,7 +16,7 @@
                 <ElButton @click="handleWithdraw" type="primary">提现</ElButton>
             </div>
         </div>
-        <div class="mt-3 text-xs text-g-700 w-fit flex-c gap-1 cursor-pointer">
+        <div @click="goPage" class="mt-3 text-xs text-g-700 w-fit flex-c gap-1 cursor-pointer">
             查看提现记录
             <ArtSvgIcon icon="solar:double-alt-arrow-right-outline"/>
         </div>
@@ -35,7 +35,7 @@
                 </div>
             </template>
             <ElDescriptions border>
-                <ElDescriptionsItem :span="3" label="游戏领域">
+                <ElDescriptionsItem :span="3" label="游戏">
                     <ElTag type="primary">{{ account.witkey?.game }}</ElTag>
                 </ElDescriptionsItem>
                 <ElDescriptionsItem :span="3" label="头衔">
@@ -73,7 +73,14 @@ interface Emits {
   (e: 'withdraw'): void
 }
 const emit = defineEmits<Emits>()
+const router = useRouter()
 const handleWithdraw = () =>{
     emit("withdraw")
+}
+
+const goPage = () =>{
+  router.push({
+    path: '/dashboard/withdraw'
+  })
 }
 </script>

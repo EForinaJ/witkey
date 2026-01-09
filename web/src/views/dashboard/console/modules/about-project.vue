@@ -1,9 +1,9 @@
 <template>
   <div class="art-card p-5 flex-b mb-5 max-sm:mb-4">
     <div>
-      <h2 class="text-2xl font-medium">关于项目</h2>
-      <p class="text-g-700 mt-1">{{ systemName }} 是一款兼具设计美学与高效开发的后台系统</p>
-      <p class="text-g-700 mt-1">使用了 Vue3、TypeScript、Vite、Element Plus 等前沿技术</p>
+      <h2 class="text-2xl font-medium">{{ site.title }}</h2>
+      <p class="text-g-700 mt-1">各位顶尖打手，欢迎入驻！</p>
+      <p class="text-g-700 mt-1">感谢你选择与我们并肩作战。在这里，我们不仅是“带老板”，更是在提供稳定、专业、值得信赖的竞技服务。我们的共同目标，是让每一位客户都获得超预期的体验，从而建立长期信任与口碑。</p>
 
       <div class="flex flex-wrap gap-3.5 max-w-150 mt-9">
         <div
@@ -22,23 +22,24 @@
 </template>
 
 <script setup lang="ts">
-  import AppConfig from '@/config'
-  import { WEB_LINKS } from '@/utils/constants'
 
-  const systemName = AppConfig.systemInfo.name
+import { useSiteStore } from '@/store/modules/site';
+import { WEB_LINKS } from '@/utils/constants'
+const {getInfo:site} = useSiteStore()
 
-  const linkList = [
-    { label: '项目官网', url: WEB_LINKS.DOCS },
-    { label: '文档', url: WEB_LINKS.INTRODUCE },
-    { label: 'Github', url: WEB_LINKS.GITHUB_HOME },
-    { label: '哔哩哔哩', url: WEB_LINKS.BILIBILI }
-  ]
 
-  /**
-   * 在新标签页中打开指定 URL
-   * @param url 要打开的网页地址
-   */
-  const goPage = (url: string): void => {
-    window.open(url, '_blank', 'noopener,noreferrer')
-  }
+const linkList = [
+  { label: '接单流程', url: WEB_LINKS.DOCS },
+  { label: '服务准则', url: WEB_LINKS.GITHUB_HOME },
+  { label: '隐私政策', url: WEB_LINKS.INTRODUCE },
+  { label: '关于我们', url: WEB_LINKS.BILIBILI }
+]
+
+/**
+ * 在新标签页中打开指定 URL
+ * @param url 要打开的网页地址
+ */
+const goPage = (url: string): void => {
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
 </script>

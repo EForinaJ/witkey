@@ -8,6 +8,9 @@ declare namespace Withdraw {
         }
         interface Modle {
             amount: number;
+            name: string;
+            number: string;
+            type: number;
         }
     }
     namespace Response {

@@ -13,3 +13,9 @@ export function fetchGetWithdrawDetail(params: {id:number}) {
     params
   })
 }
+export function fetchPostWithdrawCreate(data:Withdraw.Params.Modle) {
+  return request.post({
+    url: '/withdraw/create',
+    data
+  })
+}

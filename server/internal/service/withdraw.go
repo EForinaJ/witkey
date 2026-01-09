@@ -11,13 +11,8 @@ type IWithdraw interface {
 	GetList(ctx context.Context, req *dto_withdraw.Query) (total int, res []*dao_withdraw.List, err error)
 	GetDetail(ctx context.Context, id int64) (res *dao_withdraw.Detail, err error)
 
-	// Start(ctx context.Context, id int64) (err error)
-	// Complete(ctx context.Context, id int64) (err error)
-	// Settlement(ctx context.Context, req *dto_withdraw.Settlement) (err error)
-
-	// CheckSettlement(ctx context.Context, req *dto_withdraw.Settlement) (err error)
-	// CheckComplete(ctx context.Context, id int64) (err error)
-	// CheckStart(ctx context.Context, id int64) (err error)
+	Create(ctx context.Context, req *dto_withdraw.Create) (err error)
+	CheckCreate(ctx context.Context, req *dto_withdraw.Create) (err error)
 }
 
 // 定义接口变量

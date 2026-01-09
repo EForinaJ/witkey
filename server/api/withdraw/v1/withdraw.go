@@ -23,3 +23,9 @@ type GetDetailReq struct {
 type GetDetailRes struct {
 	*dao_withdraw.Detail
 }
+
+type CreateReq struct {
+	g.Meta `path:"/withdraw/create" method:"post" tags:"提现" summary:"创建提现"`
+	*dto_withdraw.Create
+}
+type CreateRes struct{}

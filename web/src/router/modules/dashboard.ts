@@ -25,6 +25,7 @@ export const dashboardRoutes: AppRouteRecord = {
       meta: {
           title: '我的服务',
           isHide:  true,
+          isHideTab:  true,
           keepAlive: true,
           activePath: '/dashboard/console',
       },
@@ -36,6 +37,7 @@ export const dashboardRoutes: AppRouteRecord = {
       meta: {
           title: '佣金提现',
           isHide:  true,
+          isHideTab:  true,
           keepAlive: true,
           activePath: '/dashboard/console',
       },

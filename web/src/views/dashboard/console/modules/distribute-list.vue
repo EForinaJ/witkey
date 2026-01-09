@@ -5,6 +5,10 @@
         <h4>接单记录</h4>
         <p>近期接单情况</p>
       </div>
+      <div @click="goPage" class="flex-cc h-7.5 min-w-17 border border-g-300 rounded-lg text-g-500 c-p">
+        <span class="text-xs  mr-1.5">更多</span>
+        <ArtSvgIcon icon="solar:multiple-forward-right-bold" class="text-base" />
+      </div>
     </div>
 
     <ElScrollbar style="height: 21.55rem" class="w-full">
@@ -74,6 +78,9 @@ interface Emits {
   (e: 'view', value: number): void
 }
 const emit = defineEmits<Emits>()
+
+const router = useRouter()
+
 const TYPE = {
   [DistributeType.Self]: { type: 'primary' as const, text: '个人服务' },
   [DistributeType.Team]: { type: 'primary' as const, text: '自带队伍' },
@@ -111,5 +118,11 @@ const getDistributeStatus = (status: number) => {
 
 const handleView = (id:number) => {
   emit('view',id)
+}
+
+const goPage = () =>{
+  router.push({
+    path: '/dashboard/distribute'
+  })
 }
 </script>
