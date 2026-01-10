@@ -14,14 +14,10 @@ import (
 
 // GetList implements service.IWithdraw.
 func (s *sWithdraw) GetList(ctx context.Context, req *dto_withdraw.Query) (total int, res []*dao_withdraw.List, err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+
 	m := dao.SysWithdraw.Ctx(ctx).
 		Page(req.Page, req.Limit).
-		Where(dao.SysWithdraw.Columns().WitkeyId, witkeyId).
+		Where(dao.SysWithdraw.Columns().WitkeyId, ctx.Value("userId")).
 		OrderDesc(dao.SysWithdraw.Columns().CreateTime)
 	if req.Code != "" {
 		m = m.Where(dao.SysWithdraw.Columns().Code, req.Code)

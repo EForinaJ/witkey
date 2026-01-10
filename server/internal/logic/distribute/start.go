@@ -24,16 +24,10 @@ func (s *sDistribute) Start(ctx context.Context, id int64) (err error) {
 			tx.Commit()
 		}
 	}()
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).
-		Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
 
 	orderId, err := tx.Model(dao.SysDistribute.Table()).
 		Where(dao.SysDistribute.Columns().Id, id).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).
 		Value(dao.SysDistribute.Columns().OrderId)
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))

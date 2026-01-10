@@ -13,15 +13,10 @@ import (
 
 // GetDetail implements service.IDistribute.
 func (s *sDistribute) GetDetail(ctx context.Context, id int64) (res *dao_distribute.Detail, err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).
-		Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+
 	obj, err := dao.SysDistribute.Ctx(ctx).
 		WherePri(id).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).
 		One()
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
@@ -95,7 +90,7 @@ func (s *sDistribute) GetDetail(ctx context.Context, id int64) (res *dao_distrib
 	if gconv.Int(obj.GMap().Get(dao.SysDistribute.Columns().Status)) == consts.DistributeStatusSettlemented || gconv.Int(obj.GMap().Get(dao.SysDistribute.Columns().Status)) == consts.DistributeStatusSettlementing {
 		settlementObj, err := dao.SysSettlement.Ctx(ctx).
 			Where(dao.SysSettlement.Columns().OrderId, obj.GMap().Get(dao.SysDistribute.Columns().OrderId)).
-			Where(dao.SysSettlement.Columns().WitkeyId, witkeyId).One()
+			Where(dao.SysSettlement.Columns().WitkeyId, ctx.Value("userId")).One()
 		if err != nil {
 			return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 		}

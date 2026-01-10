@@ -13,14 +13,9 @@ import (
 // GetDetail implements service.IWithdraw.
 func (s *sWithdraw) GetDetail(ctx context.Context, id int64) (res *dao_withdraw.Detail, err error) {
 
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
 	info, err := dao.SysWithdraw.Ctx(ctx).
 		Where(dao.SysWithdraw.Columns().Id, id).
-		Where(dao.SysWithdraw.Columns().WitkeyId, witkeyId).
+		Where(dao.SysWithdraw.Columns().WitkeyId, ctx.Value("userId")).
 		One()
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))

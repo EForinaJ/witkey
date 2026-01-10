@@ -15,15 +15,10 @@ import (
 
 // CheckCreate implements service.IWithdraw.
 func (s *sWithdraw) CheckCreate(ctx context.Context, req *dto_withdraw.Create) (err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
 
 	// 判断有提现记录还没审核
 	exist, err := dao.SysWithdraw.Ctx(ctx).
-		Where(dao.SysWithdraw.Columns().WitkeyId, witkeyId).
+		Where(dao.SysWithdraw.Columns().WitkeyId, ctx.Value("userId")).
 		Where(dao.SysWithdraw.Columns().Status, consts.StatusApply).Exist()
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
@@ -33,7 +28,7 @@ func (s *sWithdraw) CheckCreate(ctx context.Context, req *dto_withdraw.Create) (
 	}
 
 	commission, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().Id, witkeyId).
+		Where(dao.SysWitkey.Columns().Id, ctx.Value("userId")).
 		Value(dao.SysWitkey.Columns().Commission)
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))

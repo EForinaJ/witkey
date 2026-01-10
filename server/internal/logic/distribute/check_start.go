@@ -12,15 +12,10 @@ import (
 
 // CheckStart implements service.IDistribute.
 func (s *sDistribute) CheckStart(ctx context.Context, id int64) (err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).
-		Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+
 	obj, err := dao.SysDistribute.Ctx(ctx).
 		Where(dao.SysDistribute.Columns().Id, id).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).
 		Fields(dao.SysDistribute.Columns().Status).
 		One()
 	if err != nil {

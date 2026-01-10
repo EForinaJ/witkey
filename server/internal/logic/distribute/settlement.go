@@ -30,7 +30,7 @@ func (s *sDistribute) Settlement(ctx context.Context, req *dto_distribute.Settle
 		}
 	}()
 	witkey, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).
+		Where(dao.SysWitkey.Columns().Id, ctx.Value("userId")).
 		Fields(
 			dao.SysWitkey.Columns().Id,
 			dao.SysWitkey.Columns().TitleId,

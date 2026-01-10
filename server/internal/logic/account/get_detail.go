@@ -4,6 +4,7 @@ import (
 	"context"
 	"server/internal/consts"
 	"server/internal/dao"
+	"server/internal/model/entity"
 	dao_account "server/internal/type/account/dao"
 	utils_error "server/internal/utils/error"
 	"server/internal/utils/response"
@@ -27,48 +28,45 @@ func (s *sAccount) GetDetail(ctx context.Context) (res *dao_account.Detail, err 
 		}
 		return
 	}
-	err = dao.SysUser.Ctx(ctx).Fields(dao.SysUser.Columns().Id,
-		dao.SysUser.Columns().Name,
-		dao.SysUser.Columns().Address,
-		dao.SysUser.Columns().Sex,
-		dao.SysUser.Columns().Id,
-		dao.SysUser.Columns().LoginIp,
-		dao.SysUser.Columns().LoginTime,
-		dao.SysUser.Columns().Avatar).
-		Where(dao.SysUser.Columns().Id, userId).Scan(&res)
+	var witkey *entity.SysWitkey
+	err = dao.SysWitkey.Ctx(ctx).Fields(dao.SysWitkey.Columns().Id,
+		dao.SysWitkey.Columns().Name,
+		dao.SysWitkey.Columns().Address,
+		dao.SysWitkey.Columns().Sex,
+		dao.SysWitkey.Columns().Id,
+		dao.SysWitkey.Columns().LoginIp,
+		dao.SysWitkey.Columns().LoginTime,
+		dao.SysWitkey.Columns().Avatar).
+		Where(dao.SysWitkey.Columns().Id, userId).Scan(&witkey)
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	var witkey *dao_account.Witkey
-	witkeyObj, err := dao.SysWitkey.Ctx(ctx).Where(dao.SysWitkey.Columns().UserId, userId).One()
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	err = witkeyObj.Struct(&witkey)
+
+	var detail *dao_account.Detail
+	err = gconv.Scan(witkey, &detail)
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
 
 	title, err := dao.SysTitle.Ctx(ctx).
-		Where(dao.SysTitle.Columns().Id, witkeyObj.GMap().Get(dao.SysWitkey.Columns().TitleId)).
+		Where(dao.SysTitle.Columns().Id, witkey.TitleId).
 		Value(dao.SysTitle.Columns().Name)
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	witkey.Title = title.String()
+	detail.Title = title.String()
 
 	game, err := dao.SysGame.Ctx(ctx).
-		Where(dao.SysGame.Columns().Id, witkeyObj.GMap().Get(dao.SysWitkey.Columns().GameId)).
+		Where(dao.SysGame.Columns().Id, witkey.GameId).
 		Value(dao.SysGame.Columns().Name)
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	witkey.Game = game.String()
+	detail.Game = game.String()
 
-	res.Witkey = witkey
-	err = g.Redis().SetEX(ctx, consts.Account+gconv.String(userId), res, 600)
+	err = g.Redis().SetEX(ctx, consts.Account+gconv.String(userId), detail, 600)
 	if err != nil {
 		return nil, utils_error.Err(response.CACHE_SAVE_ERROR, response.CodeMsg(response.CACHE_SAVE_ERROR))
 	}
-	return
+	return detail, nil
 }

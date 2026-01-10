@@ -13,15 +13,10 @@ import (
 
 // CheckSettlement implements service.IDistribute.
 func (s *sDistribute) CheckSettlement(ctx context.Context, req *dto_distribute.Settlement) (err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).
-		Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+
 	obj, err := dao.SysDistribute.Ctx(ctx).
 		Where(dao.SysDistribute.Columns().Id, req.Id).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).
 		Fields(dao.SysDistribute.Columns().Status, dao.SysDistribute.Columns().OrderId).
 		One()
 	if err != nil {
@@ -45,7 +40,7 @@ func (s *sDistribute) CheckSettlement(ctx context.Context, req *dto_distribute.S
 	}
 
 	settlementExist, err := dao.SysSettlement.Ctx(ctx).
-		Where(dao.SysSettlement.Columns().WitkeyId, witkeyId).
+		Where(dao.SysSettlement.Columns().WitkeyId, ctx.Value("userId")).
 		Where(dao.SysSettlement.Columns().OrderId, obj.GMap().Get(dao.SysDistribute.Columns().OrderId)).
 		Exist()
 	if err != nil {

@@ -17,15 +17,10 @@ import (
 
 // GetDetail implements service.IDashboard.
 func (s *sDashborad) GetDetail(ctx context.Context) (res *dao_dashboard.Detail, err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
 
 	// 获取昨天收益
 	yesterdayCommission, err := dao.SysSettlement.Ctx(ctx).
-		Where(dao.SysSettlement.Columns().WitkeyId, witkeyId).
+		Where(dao.SysSettlement.Columns().WitkeyId, ctx.Value("userId")).
 		Where(dao.SysSettlement.Columns().Status, consts.StatusSuccess).
 		Where("DATE(settlement_time) = ?", gtime.Now().AddDate(0, 0, -1).Format("Y-m-d")).
 		Sum("commission")
@@ -34,7 +29,7 @@ func (s *sDashborad) GetDetail(ctx context.Context) (res *dao_dashboard.Detail, 
 	}
 
 	todayCommission, err := dao.SysSettlement.Ctx(ctx).
-		Where(dao.SysSettlement.Columns().WitkeyId, witkeyId).
+		Where(dao.SysSettlement.Columns().WitkeyId, ctx.Value("userId")).
 		Where(dao.SysSettlement.Columns().Status, consts.StatusSuccess).
 		Where("DATE(settlement_time) = ?", gtime.Now().Format("Y-m-d")).
 		Sum("commission")
@@ -52,7 +47,7 @@ func (s *sDashborad) GetDetail(ctx context.Context) (res *dao_dashboard.Detail, 
 	// 获取派单列表
 	var list []*entity.SysDistribute
 	err = dao.SysDistribute.Ctx(ctx).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).Page(1, 10).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).Page(1, 10).
 		OrderDesc(dao.SysDistribute.Columns().CreateTime).Scan(&list)
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))

@@ -17,11 +17,6 @@ import (
 
 // Create implements service.IWithdraw.
 func (s *sWithdraw) Create(ctx context.Context, req *dto_withdraw.Create) (err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
 
 	withdrawSetting, err := dao.SysConfig.Ctx(ctx).
 		Where(dao.SysConfig.Columns().Key, consts.WithdrawSetting).Value(dao.SysConfig.Columns().Value)
@@ -42,7 +37,7 @@ func (s *sWithdraw) Create(ctx context.Context, req *dto_withdraw.Create) (err e
 		settledAmount = amount.Sub(serviceFee)
 	}
 	_, err = dao.SysWithdraw.Ctx(ctx).Data(g.Map{
-		dao.SysWithdraw.Columns().WitkeyId:      witkeyId,
+		dao.SysWithdraw.Columns().WitkeyId:      ctx.Value("userId"),
 		dao.SysWithdraw.Columns().Amount:        amount,
 		dao.SysWithdraw.Columns().SettledAmount: settledAmount,
 		dao.SysWithdraw.Columns().ServiceFee:    serviceFee,

@@ -14,14 +14,10 @@ import (
 
 // GetList implements service.Idistribute.
 func (s *sDistribute) GetList(ctx context.Context, req *dto_distribute.Query) (total int, res []*dao_distribute.List, err error) {
-	witkeyId, err := dao.SysWitkey.Ctx(ctx).
-		Where(dao.SysWitkey.Columns().UserId, ctx.Value("userId")).Value(dao.SysWitkey.Columns().Id)
-	if err != nil {
-		return 0, nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
+
 	m := dao.SysDistribute.Ctx(ctx).
 		Page(req.Page, req.Limit).
-		Where(dao.SysDistribute.Columns().WitkeyId, witkeyId).
+		Where(dao.SysDistribute.Columns().WitkeyId, ctx.Value("userId")).
 		OrderDesc(dao.SysDistribute.Columns().CreateTime)
 	if req.Code != "" {
 		orderId, err := dao.SysOrder.Ctx(ctx).Where(dao.SysOrder.Columns().Code, req.Code).Value(dao.SysOrder.Columns().Id)
