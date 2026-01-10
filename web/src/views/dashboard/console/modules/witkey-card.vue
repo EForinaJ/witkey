@@ -9,7 +9,7 @@
         
         <div class="flex-c justify-between">
             <div class="flex-1 flex items-end gap-2 text-primary">
-                <span class="font-bold text-4xl">{{ account.witkey?.commission }}</span>
+                <span class="font-bold text-4xl">{{ account?.commission }}</span>
                 <span class="text-sm">{{ site.symbol }}</span>
             </div>
             <div class="ml-3">
@@ -27,23 +27,20 @@
         <ElCard shadow="hover">
             <template #header>
                 <div class="card-header flex-c justify-between">
-                    <h2 class="title font-bold">{{ account.witkey?.name }}</h2>
-                    <div>
-                        <ElButton size="small" plain>修改昵称</ElButton>
-                        <ElButton size="small" plain>修改相册</ElButton>
-                    </div>
+                    <h2 class="title font-bold">{{ account?.name }}</h2>
+                    <ElButton size="small" plain>编辑资料</ElButton>
                 </div>
             </template>
             <ElDescriptions border>
                 <ElDescriptionsItem :span="3" label="游戏">
-                    <ElTag type="primary">{{ account.witkey?.game }}</ElTag>
+                    <ElTag type="primary">{{ account?.game }}</ElTag>
                 </ElDescriptionsItem>
                 <ElDescriptionsItem :span="3" label="头衔">
-                    <ElTag type="primary">{{ account.witkey?.title }}</ElTag>
+                    <ElTag type="primary">{{ account?.title }}</ElTag>
                 </ElDescriptionsItem>
                 <ElDescriptionsItem :span="3" label="评分">
                     <ElRate
-                        :model-value="account.witkey?.rate!"
+                        :model-value="account?.rate!"
                         disabled
                         show-score
                         text-color="#ff9900"
@@ -53,7 +50,7 @@
             </ElDescriptions>
             <template #footer>
                 <ElCarousel height="160px" class="rounded">
-                    <ElCarouselItem class="rounded" v-for="item in account.witkey?.album" :key="item">
+                    <ElCarouselItem class="rounded" v-for="item in account?.album" :key="item">
                         <ElImage class="rounded" style="width: 100%; height: 160px" :src="item" />
                     </ElCarouselItem>
                 </ElCarousel>

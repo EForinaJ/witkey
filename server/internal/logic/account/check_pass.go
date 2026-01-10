@@ -15,18 +15,18 @@ import (
 
 // CheckPass implements service.IAccount.
 func (s *sAccount) CheckPass(ctx context.Context, req *dto_account.ChangePass) (err error) {
-	manage, err := dao.SysManage.Ctx(ctx).
-		Where(dao.SysManage.Columns().Id, ctx.Value("userId")).
-		Fields(dao.SysManage.Columns().Password, dao.SysManage.Columns().Salt).
+	witkey, err := dao.SysWitkey.Ctx(ctx).
+		Where(dao.SysWitkey.Columns().Id, ctx.Value("userId")).
+		Fields(dao.SysWitkey.Columns().Password, dao.SysWitkey.Columns().Salt).
 		One()
 	if err != nil {
 		return utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
-	salt := gconv.String(manage.GMap().Get(dao.SysManage.Columns().Salt))
+	salt := gconv.String(witkey.GMap().Get(dao.SysManage.Columns().Salt))
 
 	randPwd := consts.SYSTEMNAME + req.OldPass + salt
 	randPwd = gmd5.MustEncryptString(randPwd)
-	if !strings.EqualFold(gconv.String(manage.GMap().Get(dao.SysManage.Columns().Password)), randPwd) {
+	if !strings.EqualFold(gconv.String(witkey.GMap().Get(dao.SysWitkey.Columns().Password)), randPwd) {
 		return utils_error.Err(response.UPDATE_FAILED, "密码不正确")
 	}
 

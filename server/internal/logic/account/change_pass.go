@@ -19,12 +19,12 @@ func (s *sAccount) ChangePass(ctx context.Context, req *dto_account.ChangePass) 
 	newSalt := grand.S(6)
 	newToken := consts.SYSTEMNAME + req.ConfirmPass + newSalt
 	newToken = gmd5.MustEncryptString(newToken)
-	_, err = dao.SysManage.Ctx(ctx).
-		Where(dao.SysManage.Columns().Id, ctx.Value("userId")).
+	_, err = dao.SysWitkey.Ctx(ctx).
+		Where(dao.SysWitkey.Columns().Id, ctx.Value("userId")).
 		Data(g.Map{
-			dao.SysManage.Columns().Salt:       newSalt,
-			dao.SysManage.Columns().Password:   newToken,
-			dao.SysManage.Columns().UpdateTime: gtime.Now(),
+			dao.SysWitkey.Columns().Salt:       newSalt,
+			dao.SysWitkey.Columns().Password:   newToken,
+			dao.SysWitkey.Columns().UpdateTime: gtime.Now(),
 		}).Update()
 	if err != nil {
 		return utils_error.Err(response.ADD_FAILED, response.CodeMsg(response.ADD_FAILED))

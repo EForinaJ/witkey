@@ -10,6 +10,7 @@ import (
 	"server/internal/utils/response"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -34,6 +35,13 @@ func (s *sAccount) GetDetail(ctx context.Context) (res *dao_account.Detail, err 
 		dao.SysWitkey.Columns().Address,
 		dao.SysWitkey.Columns().Sex,
 		dao.SysWitkey.Columns().Id,
+		dao.SysWitkey.Columns().GameId,
+		dao.SysWitkey.Columns().TitleId,
+		dao.SysWitkey.Columns().Commission,
+		dao.SysWitkey.Columns().Album,
+		dao.SysWitkey.Columns().Rate,
+		dao.SysWitkey.Columns().Description,
+		dao.SysWitkey.Columns().Birthday,
 		dao.SysWitkey.Columns().LoginIp,
 		dao.SysWitkey.Columns().LoginTime,
 		dao.SysWitkey.Columns().Avatar).
@@ -47,6 +55,7 @@ func (s *sAccount) GetDetail(ctx context.Context) (res *dao_account.Detail, err 
 	if err != nil {
 		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
 	}
+	detail.Birthday = gtime.New(witkey.Birthday).TimestampMilli()
 
 	title, err := dao.SysTitle.Ctx(ctx).
 		Where(dao.SysTitle.Columns().Id, witkey.TitleId).

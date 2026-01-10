@@ -2,12 +2,12 @@ declare namespace Account {
     namespace Params {
         interface Model {
             name: string | null;
-            email: string | null;
             address: string[];
             sex: number | null;
             avatar: string | null;
             description: string | null;
-            tags: string[];
+            birthday: number | null;
+            album: string[];
         }
         interface ChangePass {
             oldPass: string | null;
@@ -22,18 +22,15 @@ declare namespace Account {
             id: number
             name: string| null;
             avatar?: string| null;
-            email: string | null;
+            birthday: number | null;
             address: string[];
             sex: number | null;
-            witkey: {
-                id: number
-                name: string| null;
-                title: string| null;
-                game: string| null;
-                commission: number| null;
-                album: string[];
-                rate: number| null;
-            };
+            title: string| null;
+            game: string| null;
+            commission: number| null;
+            album: string[];
+            rate: number| null;
+            description: string| null;
             loginIp?: string| null;
         }
     }

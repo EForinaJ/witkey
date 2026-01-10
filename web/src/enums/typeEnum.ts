@@ -7,3 +7,9 @@ export enum WithdrawType {
     AlyPay = 1,      // 支付宝
     Wechat = 2,      // 微信
 }
+export enum SexType {
+    Male = 1,      // 男
+    Female = 2,    // 女
+    Other = 3,     // 其他
+}
+  
