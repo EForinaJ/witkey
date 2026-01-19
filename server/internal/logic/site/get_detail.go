@@ -14,7 +14,7 @@ import (
 
 // GetInfo implements service.ISite.
 func (s *sSite) GetInfo(ctx context.Context) (res *dao_site.Detail, err error) {
-	options, err := g.Redis().Get(ctx, "site")
+	options, err := g.Redis().Get(ctx, "witkey_site")
 	if err != nil {
 		return nil, utils_error.Err(response.CACHE_READ_ERROR, response.CodeMsg(response.CACHE_READ_ERROR))
 	}
@@ -44,6 +44,7 @@ func (s *sSite) GetInfo(ctx context.Context) (res *dao_site.Detail, err error) {
 	site.Address = baseJson.Get("address").String()
 	site.ICP = baseJson.Get("icp").String()
 	site.Copyright = baseJson.Get("copyright").String()
+	site.Symbol = baseJson.Get("symbol").String()
 
 	fileSetting, err := dao.SysConfig.Ctx(ctx).
 		Where(dao.SysConfig.Columns().Key, consts.FileSetting).
@@ -60,20 +61,8 @@ func (s *sSite) GetInfo(ctx context.Context) (res *dao_site.Detail, err error) {
 	site.ImageSize = fileJson.Get("imageSize").Int()
 	site.ImageType = fileJson.Get("imageType").Strings()
 
-	withdrawSetting, err := dao.SysConfig.Ctx(ctx).
-		Where(dao.SysConfig.Columns().Key, consts.WithdrawSetting).
-		Value(dao.SysConfig.Columns().Value)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	withdrawJson, err := gjson.DecodeToJson(withdrawSetting)
-	if err != nil {
-		return nil, utils_error.Err(response.DB_READ_ERROR, response.CodeMsg(response.DB_READ_ERROR))
-	}
-	site.Symbol = withdrawJson.Get("symbol").String()
-
 	res = &site
-	err = g.Redis().SetEX(ctx, "site", site, 600)
+	err = g.Redis().SetEX(ctx, "witkey_site", site, 600)
 	if err != nil {
 		return nil, utils_error.Err(response.CACHE_SAVE_ERROR, response.CodeMsg(response.CACHE_SAVE_ERROR))
 	}
